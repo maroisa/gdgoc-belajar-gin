@@ -1,29 +1,41 @@
 package note
 
-import "github.com/gin-gonic/gin"
+import (
+	"belajar-gin/db/model"
+	"context"
+	"log"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
 
 func (nh *NoteHandler) Routes() {
 	note := nh.r.Group("/note")
-	note.GET("/", getNotes)
-	note.POST("/", postNotes)
-	note.PUT("/:id", putNotes)
-	note.DELETE("/:id", deleteNotes)
+	note.GET("/", nh.getNotes)
+	note.POST("/", nh.postNotes)
+	note.PUT("/:id", nh.putNotes)
+	note.DELETE("/:id", nh.deleteNotes)
 }
 
-func getNotes(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Hello World",
-	})
+func (nh *NoteHandler) getNotes(c *gin.Context) {
+	ctx := context.Background()
+
+	notes, err := gorm.G[model.Note](nh.db).Find(ctx)
+	if err != nil {
+		log.Println("Failed to get notes: ", err.Error())
+	}
+
+	log.Println(notes)
 }
 
-func postNotes(c *gin.Context) {
+func (nh *NoteHandler) postNotes(c *gin.Context) {
 
 }
 
-func putNotes(c *gin.Context) {
+func (nh *NoteHandler) putNotes(c *gin.Context) {
 
 }
 
-func deleteNotes(c *gin.Context) {
+func (nh *NoteHandler) deleteNotes(c *gin.Context) {
 
 }

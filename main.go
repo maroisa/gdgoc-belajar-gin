@@ -5,6 +5,7 @@ import (
 
 	"belajar-gin/db"
 	"belajar-gin/server/note"
+	"belajar-gin/db/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -18,6 +19,8 @@ func main() {
 
 	DB := db.NewConnection()
 	r := gin.Default()
+
+	DB.AutoMigrate(&model.Note{})
 
 	note.NewHandler(r, DB)
 
