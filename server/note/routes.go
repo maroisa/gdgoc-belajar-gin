@@ -2,8 +2,8 @@ package note
 
 import (
 	"belajar-gin/db/model"
+	"belajar-gin/server"
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,32 +21,39 @@ func (nh *NoteHandler) Routes() {
 func (nh *NoteHandler) getNotes(c *gin.Context) {
 	notes, err := gorm.G[model.Note](nh.db).Find(context.Background())
 	if err != nil {
-		log.Println("Failed")
+		server.Response(c, &server.BaseResponse{
+			Message: err.Error(),
+		})
 		return
 	}
-	c.JSON(http.StatusOK, notes)
+	server.Response(c, &server.BaseResponse{
+		Data: notes,
+	})
 }
 
 func (nh *NoteHandler) postNotes(c *gin.Context) {
 	var note model.Note
 	if err := c.ShouldBindJSON(&note); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Bad Request",
+		server.Response(c, &server.BaseResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Bad Request",
 		})
 		return
 	}
 
 	if note.Judul == "" || note.Deskripsi == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Bad Request",
+		server.Response(c, &server.BaseResponse{
+			Status:  http.StatusBadRequest,
+			Message: "Field cannot be empty",
 		})
 		return
 	}
 
 	err := gorm.G[model.Note](nh.db).Create(context.Background(), &note)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Failed to insert note: " + err.Error(),
+		server.Response(c, &server.BaseResponse{
+			Status:  http.StatusInternalServerError,
+			Message: "Failed to insert note: " + err.Error(),
 		})
 	}
 
