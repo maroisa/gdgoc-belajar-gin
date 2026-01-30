@@ -1,0 +1,22 @@
+#+title: GDGOC Belajar Gin
+#+author: maroisa
+
+RESTful API Go sederhana menggunakan Gin dan GORM
+dibuat untuk assignment tugas GDGOC
+
+
+** Kebutuhan
+- Go >= 1.24
+- MySQL/MariaDB
+
+** Setup
+#+begin_src bash
+# Clone repository
+git clone https://github.com/maroisa/gdgoc-belajar-gin.git && cd gdgoc-belajar-gin
+
+# install dependecies
+go mod download
+
+# Jalankan
+go run .
+#+end_src
